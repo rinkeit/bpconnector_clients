@@ -62,5 +62,6 @@ While(-not [string]::IsNullOrEmpty($pagination_token)) {
     $pagination_token = $stock_request.next_token
 }
 
-
 $stock| Export-Csv -Path $filename -NoTypeInformation
+
+Write-Host "...Done"
