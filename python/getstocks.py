@@ -71,6 +71,4 @@ while(True) :
 data = pandas.DataFrame(stock)
 data.to_csv(filename, header=True, index=False)
 
-    
-
-
+print("...Done")
