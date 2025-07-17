@@ -31,11 +31,11 @@ Imports System.Text.Json
 Imports Microsoft.AspNetCore.WebUtilities
 
 Module Program
-    Dim API_Endpoint_Url As String = "https://firma.jom.de"
+    Dim API_Endpoint_Url As String = ""
     Dim API_Endpoint_Port As Integer = 5001
 
-    Dim API_Username As String = "11955"
-    Dim API_Password As String = "test"
+    Dim API_Username As String = ""
+    Dim API_Password As String = ""
 
     Dim limit As Integer = 500
     Dim filename As String = "d:\temp\stock.csv"
