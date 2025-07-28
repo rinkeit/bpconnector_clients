@@ -54,6 +54,8 @@ $request_header = @{
     'Authorization'='Bearer '+$login_request.access_token
 }
 
+$pagination_token = ""
+
 While($true) {
     $stock_request = Invoke-WebRequest -Uri $API_Endpoint_Url':'$API_Endpoint_Port'/api/v2/stock?pagination_token='$pagination_token'&max_result='$limit -Method GET -Headers $request_header -ContentType "application/json" | ConvertFrom-Json    
     $stock.AddRange($stock_request.data)    
