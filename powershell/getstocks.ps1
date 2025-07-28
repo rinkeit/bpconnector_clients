@@ -33,6 +33,8 @@ $filename = "d:\temp\stocks.csv"
 
 $stock = [System.Collections.Generic.List[System.Object]]::new()
 
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+
 $login_params = @{
     'username'=$API_Username
     'password'=$API_Password
