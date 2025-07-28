@@ -68,34 +68,29 @@ Module Program
         client.DefaultRequestHeaders.Authorization = New AuthenticationHeaderValue("Bearer", loginResponseData("access_token").ToString())
 
         Try
-            Dim queryParams As New Dictionary(Of String, String) From {
-                {"max_result", limit.ToString()}
-            }
+            Dim paginationToken = ""
 
-            Dim stockRequest = client.GetAsync(QueryHelpers.AddQueryString($"{API_Endpoint_Url}:{API_Endpoint_Port}/api/v2/stock", queryParams)).Result
-            Dim stockResponse = stockRequest.Content.ReadAsStringAsync().Result
-            Dim stockResponseData = JsonSerializer.Deserialize(Of ResultStocks)(stockResponse)
-            Dim paginationToken = stockResponseData.next_token
-            Stock.AddRange(stockResponseData.data)
-
-            While Not String.IsNullOrEmpty(paginationToken)
-                Dim nextParams As New Dictionary(Of String, String) From {
+            While True
+                Dim Params As New Dictionary(Of String, String) From {
                     {"max_result", limit.ToString()},
                     {"pagination_token", paginationToken}
                 }
 
-                Dim nextStockRequest = client.GetAsync(QueryHelpers.AddQueryString($"{API_Endpoint_Url}:{API_Endpoint_Port}/api/v2/stock", nextParams)).Result
-                Dim nextStockResponse = nextStockRequest.Content.ReadAsStringAsync().Result
-                Dim nextStockData = JsonSerializer.Deserialize(Of ResultStocks)(nextStockResponse)
+                Dim StockRequest = client.GetAsync(QueryHelpers.AddQueryString($"{API_Endpoint_Url}:{API_Endpoint_Port}/api/v2/stock", Params)).Result
+                Dim StockResponse = StockRequest.Content.ReadAsStringAsync().Result
+                Dim StockData = JsonSerializer.Deserialize(Of ResultStocks)(StockResponse)
+                paginationToken = StockData.next_token
+                Stock.AddRange(StockData.data)
 
-                paginationToken = nextStockData.next_token
-                Stock.AddRange(nextStockData.data)
+                If String.IsNullOrEmpty(paginationToken) Then
+                    Exit While
+                End If
             End While
 
         Catch ex As Exception
             Console.WriteLine(ex.ToString())
         End Try
-
+                
         SaveToCsv(Stock, filename)
         Console.WriteLine("...Done")
     End Sub
