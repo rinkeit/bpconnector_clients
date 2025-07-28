@@ -52,14 +52,14 @@ $request_header = @{
     'Authorization'='Bearer '+$login_request.access_token
 }
 
-$stock_request = Invoke-WebRequest -Uri $API_Endpoint_Url':'$API_Endpoint_Port'/api/v2/stock?max_result='$limit -Method GET -Headers $request_header -ContentType "application/json" | ConvertFrom-Json
-$pagination_token = $stock_request.next_token
-$stock.AddRange($stock_request.data)
-
-While(-not [string]::IsNullOrEmpty($pagination_token)) {
+While($true) {
     $stock_request = Invoke-WebRequest -Uri $API_Endpoint_Url':'$API_Endpoint_Port'/api/v2/stock?pagination_token='$pagination_token'&max_result='$limit -Method GET -Headers $request_header -ContentType "application/json" | ConvertFrom-Json    
-    $stock.AddRange($stock_request.data)
+    $stock.AddRange($stock_request.data)    
     $pagination_token = $stock_request.next_token
+
+    if([string]::IsNullOrEmpty($pagination_token)) {
+        break
+    }
 }
 
 $stock| Export-Csv -Path $filename -NoTypeInformation
