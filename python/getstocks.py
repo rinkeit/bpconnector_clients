@@ -55,17 +55,15 @@ request_header = {
     'Authorization': 'Bearer ' + login_request["access_token"]
 }
 
-stock_request = json.loads(requests.get(API_Endpoint_Url + ':' + str(API_Endpoint_Port) + '/api/v2/stock?max_result=' +str(limit), headers = request_header).text)
-pagination_token = stock_request["next_token"]
-stock.extend(stock_request["data"])
+pagination_token = ""
 
 while(True) :
-    stock_request = json.loads(requests.get(API_Endpoint_Url + ':' + str(API_Endpoint_Port) + '/api/v2/stock?pagination_token='+pagination_token+'&max_result=' +str(limit), headers = request_header).text)
+    stock_request = json.loads(requests.get(API_Endpoint_Url + ':' + str(API_Endpoint_Port) + '/api/v2/stock?pagination_token='+pagination_token+'&max_result=' +str(limit), headers = request_header).text)    
     stock.extend(stock_request["data"])
-
+    
     if(not "next_token" in stock_request) :
         break
-
+        
     pagination_token = stock_request["next_token"]
 
 data = pandas.DataFrame(stock)
