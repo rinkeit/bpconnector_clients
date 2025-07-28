@@ -68,24 +68,19 @@ client.DefaultRequestHeaders.Add("Authorization", "Bearer " + LoginResponseData[
 
 try
 {   
-    var StockRequest = await client.GetAsync(QueryHelpers.AddQueryString(API_Endpoint_Url + ':' + API_Endpoint_Port + "/api/v2/stock", new Dictionary<string, string> { { "max_result", limit.ToString() } }));
-    string StockResponse = await StockRequest.Content.ReadAsStringAsync();    
-    ResultStocks StockResponseData = (ResultStocks)JsonSerializer.Deserialize(StockResponse, typeof(ResultStocks));
-    string PaginationToken = StockResponseData.next_token;
-    Stock.AddRange(StockResponseData.data);
+    string PaginationToken = "";
 
-    while(true)
+    while (true)
     {        
-        var NextStockRequest = await client.GetAsync(QueryHelpers.AddQueryString(API_Endpoint_Url + ':' + API_Endpoint_Port + "/api/v2/stock", new Dictionary<string, string> { { "max_result", limit.ToString() }, { "pagination_token", PaginationToken } }));
-        string NextStockResponse = await NextStockRequest.Content.ReadAsStringAsync();
-        ResultStocks NextStockResponseData = (ResultStocks)JsonSerializer.Deserialize(NextStockResponse, typeof(ResultStocks));
-        PaginationToken = NextStockResponseData.next_token;
-        Stock.AddRange(NextStockResponseData.data);
+        var StockRequest = await client.GetAsync(QueryHelpers.AddQueryString(API_Endpoint_Url + ':' + API_Endpoint_Port + "/api/v2/stock", new Dictionary<string, string> { { "max_result", limit.ToString() }, { "pagination_token", PaginationToken } }));
+        string StockResponse = await StockRequest.Content.ReadAsStringAsync();
+        ResultStocks StockResponseData = (ResultStocks)JsonSerializer.Deserialize(StockResponse, typeof(ResultStocks));
+        PaginationToken = StockResponseData.next_token;
+        Stock.AddRange(StockResponseData.data);
 
         if (string.IsNullOrEmpty(PaginationToken))
             break;
-    }
-    
+    }    
 } catch(Exception ex)
 {
     Console.WriteLine(ex.ToString());
