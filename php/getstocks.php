@@ -54,13 +54,9 @@ $request_header = [
     'Authorization: Bearer ' . $access_token
 ];
 
-$url = "{$API_Endpoint_Url}:{$API_Endpoint_Port}/api/v2/stock?max_result={$limit}";
-$stock_response = http_get_json($url, $request_header);
-$stock = array_merge($stock, $stock_response['data']);
+$pagination_token = ""; 
 
-$pagination_token = $stock_response['next_token'] ?? null;
-
-while ($pagination_token) {
+while (true) {
     $url = "{$API_Endpoint_Url}:{$API_Endpoint_Port}/api/v2/stock?pagination_token={$pagination_token}&max_result={$limit}";
     $stock_response = http_get_json($url, $request_header);
     $stock = array_merge($stock, $stock_response['data']);
@@ -90,6 +86,9 @@ function http_post_json($url, $data) {
     $ch = curl_init($url);
     $payload = json_encode($data);
     curl_setopt_array($ch, [
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_VERBOSE => false,        
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
@@ -103,6 +102,9 @@ function http_post_json($url, $data) {
 function http_get_json($url, $headers = []) {
     $ch = curl_init($url);
     curl_setopt_array($ch, [
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_VERBOSE => false,     
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => $headers
     ]);
