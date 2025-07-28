@@ -112,20 +112,16 @@ const GetStock =((access_token, limit, pagination_token) => {
 (async function(){
     let access_token = await GetAuth();
   
-    const stock_request = await GetStock(access_token, limit, '');    
-    let pagination_token = stock_request.pagination_token;     
-    stock = stock_request.stock_data;
-    
-   while(true) {        
-        const next_stock_request = await GetStock(access_token, limit, pagination_token);
-        pagination_token = next_stock_request.pagination_token; 
-        stock = stock.concat(next_stock_request.stock_data);
+    let pagination_token = "";
+
+    while(true) {        
+        const stock_request = await GetStock(access_token, limit, pagination_token);
+        pagination_token = stock_request.pagination_token; 
+        stock = stock.concat(stock_request.stock_data);
 
         if(pagination_token == undefined)
             break;
     }
-    
-    //console.table(stock);
 
     const createCsvWriter = require('csv-writer').createObjectCsvWriter; // npm i csv-writer / https://www.npmjs.com/package/csv-writer
     const csvWriter = createCsvWriter({
