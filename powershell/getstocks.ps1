@@ -30,7 +30,7 @@ $data = [System.Collections.Generic.List[System.Object]]::new()
 
 [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { -Not $API_Verify_SSL }
 
-New-Item -ItemType Directory -Force -Path $exportfolder
+New-Item -ItemType Directory -Force -Path $exportfolder | Out-Null
 
 $login_params = @{
     'username'=$API_Username
@@ -72,6 +72,6 @@ While($true) {
 $Count = $data.Count
 Write-Host "processing $Count articles"
 
-$data| Export-Csv -Path (Join-Path $exportfolder $stocks_filename) -NoTypeInformation
+$data| Export-Csv -Path (Join-Path $exportfolder $stocks_filename) -NoTypeInformation -Delimiter $csv_seperator
 
 Write-Host "...Done"
