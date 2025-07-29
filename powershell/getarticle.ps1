@@ -106,9 +106,17 @@ foreach($d in $data) {
         $imagefilename = Split-Path $i.webshop_url -leaf        
         $images += $imagefilename       
       
-        if($articles_download_images) {                
+        if($articles_download_images) {
             $imagePath = Join-Path -Path (Join-Path $exportfolder $imagefolder) -ChildPath $imagefilename     
-            $wc.DownloadFile($i.webshop_url, $imagePath)
+            if(-Not [System.IO.File]::Exists($imagePath) -Or $articles_overwrite_images) {
+                try {
+                    $wc.DownloadFile($i.webshop_url, $imagePath)
+                } catch [System.Net.WebException],[System.IO.IOException] {
+                    "couldn't download image " + $i.webshop_url
+                } catch {
+                    "An error occurred that could not be resolved."
+                }
+            }
         }
     }
 
