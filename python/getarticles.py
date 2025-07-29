@@ -101,7 +101,7 @@ for d in data :
         imagefilename = os.path.basename(i["webshop_url"])
         images.append(imagefilename)   
 
-        if(config.download_images) :
+        if(config.articles_download_images) :
             imageresponse  = requests.get(i["webshop_url"])
         
             with open(config.exportfolder + config.imagefolder + "/" + imagefilename, mode="wb") as file:
