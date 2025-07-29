@@ -92,7 +92,13 @@ for d in data :
         'short_description': d["short_description"],
         'description': d["description"],
         'upe': d["upe"],
-        'gew': d["gew"]
+        'gew': d["gew"],
+        'short_description_de_DE': "".
+        'description_de_DE': "",
+        'short_description_fr_FR': "",
+        'description_fr_FR': "",
+        'short_description_en_EN': "",
+        'description_en_EN': ""
     }    
 
     images = []
