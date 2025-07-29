@@ -83,13 +83,13 @@ foreach($d in $data) {
     Write-Progress -PercentComplete ($Counter/100*100) -Status "Processing Items" -Activity "Item $item of $Count"
     $counter++
        
-   $a = @{
-       sku = $s.sku; 
-       ean = $s.ean; 
-       short_description = $s.short_description; 
-       description = $s.description; 
-       upe = $s.upe; 
-       gew = $s.gew;
+    $a = @{
+       sku = $d.sku; 
+       ean = $d.ean; 
+       short_description = $d.short_description; 
+       description = $d.description; 
+       upe = $d.upe; 
+       gew = $d.gew;
        short_description_de_DE = "";
        description_de_DE = "";
        short_description_fr_FR = "";
