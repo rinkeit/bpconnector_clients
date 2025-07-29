@@ -107,7 +107,8 @@ foreach($d in $data) {
         $images += $imagefilename       
       
         if($articles_download_images) {
-            $imagePath = Join-Path -Path (Join-Path $exportfolder $imagefolder) -ChildPath $imagefilename     
+            $imagePath = Join-Path -Path (Join-Path $exportfolder $imagefolder) -ChildPath $imagefilename   
+            
             if(-Not [System.IO.File]::Exists($imagePath) -Or $articles_overwrite_images) {
                 try {
                     $wc.DownloadFile($i.webshop_url, $imagePath)
