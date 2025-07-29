@@ -1,4 +1,4 @@
-﻿#
+#
 #  #########################################################################
 #  #     
 #  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -22,18 +22,13 @@
 #  #########################################################################
 #
 
-$API_Endpoint_Url = ''
-$API_Endpoint_Port = 5001
-
-$API_Username = ''
-$API_Password = ''
+. "$PSScriptRoot\config.ps1"
 
 $limit = 500
-$filename = "d:\temp\stocks.csv"
 
-$stock = [System.Collections.Generic.List[System.Object]]::new()
+$data = [System.Collections.Generic.List[System.Object]]::new()
 
-[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { -Not $API_Verify_SSL }
 
 $login_params = @{
     'username'=$API_Username
@@ -49,23 +44,32 @@ if([string]::IsNullOrEmpty($login_request.access_token)) {
     Exit
 }
 
+Write-Host "login successful"
+
 # Get stocks
 $request_header = @{
     'Authorization'='Bearer '+$login_request.access_token
 }
 
 $pagination_token = ""
+$chunk = 0
 
 While($true) {
-    $stock_request = Invoke-WebRequest -Uri $API_Endpoint_Url':'$API_Endpoint_Port'/api/v2/stock?pagination_token='$pagination_token'&max_result='$limit -Method GET -Headers $request_header -ContentType "application/json" | ConvertFrom-Json    
-    $stock.AddRange($stock_request.data)    
-    $pagination_token = $stock_request.next_token
+    $chunk += 1
+    Write-Host "retrieve data (chunk $chunk, chunksize $limit)"
 
+    $request = Invoke-WebRequest -Uri $API_Endpoint_Url':'$API_Endpoint_Port'/api/v2/stock?pagination_token='$pagination_token'&max_result='$limit -Method GET -Headers $request_header -ContentType "application/json" | ConvertFrom-Json    
+    $data.AddRange($request.data)    
+    $pagination_token = $request.next_token
+    
     if([string]::IsNullOrEmpty($pagination_token)) {
         break
     }
 }
 
-$stock| Export-Csv -Path $filename -NoTypeInformation
+$Count = $data.Count
+Write-Host "processing $Count articles"
+
+$data| Export-Csv -Path $exportfolder$stocks_filename -NoTypeInformation
 
 Write-Host "...Done"
