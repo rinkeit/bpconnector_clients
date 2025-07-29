@@ -102,16 +102,22 @@ for d in data :
     }    
 
     images = []
-    for i in d["images"] :
-         
+    
+    for i in d["images"] :    
         imagefilename = os.path.basename(i["webshop_url"])
         images.append(imagefilename)   
 
         if(config.articles_download_images) :
-            imageresponse  = requests.get(i["webshop_url"])
+            imagePath = config.exportfolder + config.imagefolder + "/" + imagefilename
+
+            if(Path(imagePath).exists() == False or config.articles_overwrite_images) :
+                try :
+                    imageresponse  = requests.get(i["webshop_url"])
         
-            with open(config.exportfolder + config.imagefolder + "/" + imagefilename, mode="wb") as file:
-                file.write(imageresponse.content)      
+                    with open(imagePath, mode="wb") as file:
+                        file.write(imageresponse.content)      
+                except:
+                    "couldn't download image " + i["webshop_url"]
 
     a['images'] = ','.join(images)
 
