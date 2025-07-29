@@ -72,6 +72,6 @@ While($true) {
 $Count = $data.Count
 Write-Host "processing $Count articles"
 
-$data| Export-Csv -Path $exportfolder$stocks_filename -NoTypeInformation
+$data| Export-Csv -Path (Join-Path $exportfolder $stocks_filename) -NoTypeInformation
 
 Write-Host "...Done"
