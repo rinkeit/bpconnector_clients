@@ -14,6 +14,7 @@ csv_seperator = ";"
 # articles
 articles_download_images = True
 articles_filename = "articles.csv"
+articles_overwrite_images = False
 
 # stocks
 stocks_filename = "stocks.csv"
