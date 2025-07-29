@@ -13,6 +13,7 @@ $csv_seperator = ";"
 # articles
 $articles_download_images = $true
 $articles_filename = "articles.csv"
+$articles_overwrite_images = $false
 
 # stocks
 $stocks_filename = "stocks.csv"
