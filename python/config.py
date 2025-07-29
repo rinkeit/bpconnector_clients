@@ -6,8 +6,6 @@ API_Password = ''
 
 API_Verify_SSL = False
 
-limit = 500
-
 exportfolder = "d:/temp/exportdata/"
 filename = "articles.csv"
 imagefolder = "images/"
