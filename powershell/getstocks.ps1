@@ -30,6 +30,8 @@ $data = [System.Collections.Generic.List[System.Object]]::new()
 
 [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { -Not $API_Verify_SSL }
 
+New-Item -ItemType Directory -Force -Path $exportfolder
+
 $login_params = @{
     'username'=$API_Username
     'password'=$API_Password
