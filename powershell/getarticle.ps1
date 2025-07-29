@@ -71,8 +71,6 @@ While($true) {
     if([string]::IsNullOrEmpty($pagination_token)) {
         break
     }
-
-    break
 }
 
 $Count = $data.Count
